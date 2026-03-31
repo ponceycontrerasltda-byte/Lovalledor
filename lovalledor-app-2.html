@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mercado Lo Valledor</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a5c2a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lo Valledor">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #1a5c2a;
+    --verde-claro: #2d7a3f;
+    --naranja: #e8550a;
+    --crema: #f5f0e8;
+    --dorado: #c8a535;
+    --gris: #2a2a2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--crema);
+    color: var(--gris);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--verde);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 1rem 0;
+    line-height: 1.2;
+  }
+  .nav-logo span { color: var(--dorado); display: block; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; font-family: 'DM Sans', sans-serif; font-weight: 300; }
+
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    height: 100%;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 1.2rem 1.4rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    border-bottom: 3px solid transparent;
+    position: relative;
+  }
+
+  .tab-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+  .tab-btn.active { color: var(--dorado); border-bottom-color: var(--dorado); background: rgba(255,255,255,0.07); }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--verde) 0%, var(--verde-claro) 60%, #3a9050 100%);
+    padding: 5rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(200,165,53,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: var(--naranja);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.1;
+    max-width: 700px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 em {
+    color: var(--dorado);
+    font-style: normal;
+  }
+
+  .hero p {
+    color: rgba(255,255,255,0.8);
+    font-size: 1.1rem;
+    max-width: 550px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .stat { text-align: left; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: var(--dorado);
+    font-weight: 900;
+    display: block;
+  }
+  .stat-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* SECTIONS */
+  .section { display: none; animation: fadeIn 0.4s ease; }
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--verde);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-sub {
+    color: #888;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--dorado);
+    display: inline-block;
+  }
+
+  /* HORARIOS */
+  .horarios-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+  .horario-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.07);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .horario-card:hover { transform: translateY(-4px); box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+
+  .horario-header {
+    background: var(--verde);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .horario-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--dorado);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .horario-header h3 { color: white; font-size: 1.2rem; font-family: 'Playfair Display', serif; }
+  .horario-header p { color: rgba(255,255,255,0.6); font-size: 0.8rem; }
+
+  .horario-body { padding: 1.5rem; }
+
+  .horario-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .horario-item:last-child { border-bottom: none; }
+
+  .horario-item .dia { font-weight: 500; color: var(--gris); }
+  .horario-item .hora {
+    background: var(--crema);
+    color: var(--verde);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    border: 1px solid rgba(26,92,42,0.15);
+  }
+
+  .alerta {
+    background: #fff8e6;
+    border: 1px solid var(--dorado);
+    border-left: 4px solid var(--dorado);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #7a6020;
+  }
+  .alerta strong { color: var(--naranja); }
+
+  /* MAPA */
+  .mapa-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    border-top: 3px solid var(--verde);
+  }
+
+  .info-card .ic { font-size: 2rem; margin-bottom: 0.8rem; }
+  .info-card h4 { font-family: 'Playfair Display', serif; color: var(--verde); margin-bottom: 0.5rem; }
+  .info-card p { font-size: 0.9rem; color: #666; line-height: 1.5; }
+
+  /* MAPA INTERACTIVO */
+  .mapa-interactivo-wrap {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+  }
+
+  .mapa-banner {
+    background: var(--verde);
+    color: rgba(255,255,255,0.75);
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    border-bottom: 3px solid var(--dorado);
+  }
+  .mapa-banner strong { color: var(--dorado); }
+
+  .mapa-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 560px;
+  }
+
+  /* Sidebar del mapa */
+  .mapa-sidebar {
+    background: var(--verde);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+  }
+
+  .mapa-sidebar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: var(--dorado);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .mapa-tab-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .mapa-tab {
+    padding: 5px 10px;
+    border-radius: 5px 5px 0 0;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.5);
+    border: none;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .mapa-tab.active { background: var(--dorado); color: var(--gris); }
+
+  .mapa-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid transparent;
+  }
+  .mapa-legend-item:hover, .mapa-legend-item.active {
+    background: rgba(255,255,255,0.12);
+    border-color: var(--dorado);
+    transform: translateX(3px);
+  }
+
+  .mapa-legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+  .mapa-legend-text { color: var(--crema); font-size: 0.78rem; font-weight: 500; line-height: 1.3; }
+  .mapa-legend-sub  { color: rgba(255,255,255,0.45); font-size: 0.65rem; font-weight: 300; }
+
+  .mapa-info-box {
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 4px;
+  }
+  .mapa-info-box h5 {
+    color: var(--dorado);
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+  .mapa-info-box p { color: rgba(255,255,255,0.7); font-size: 0.72rem; line-height: 1.6; }
+
+  /* Canvas del mapa */
+  .mapa-canvas {
+    position: relative;
+    background: #d4e8c4;
+    overflow: hidden;
+    min-height: 560px;
+  }
+
+  .mapa-grid-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.025) 0px, rgba(0,0,0,0.025) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,0.025) 0px, rgba(0,0,0,0.025) 1px, transparent 1px, transparent 40px);
+  }
+
+  .mapa-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 560px;
+  }
+
+  .mapa-calle {
+    position: absolute;
+    background: #c8b99a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #3d2b1f;
+    opacity: 0.8;
+  }
+  .mapa-calle-top    { top: 5%; left: 12%; right: 12%; height: 26px; border-radius: 4px; }
+  .mapa-calle-bottom { bottom: 5%; left: 12%; right: 12%; height: 26px; border-radius: 4px; }
+  .mapa-calle-left   { left: 5%; top: 12%; bottom: 12%; width: 26px; border-radius: 4px; writing-mode: vertical-rl; }
+  .mapa-calle-right  { right: 5%; top: 12%; bottom: 12%; width: 26px; border-radius: 4px; writing-mode: vertical-rl; }
+
+  .mapa-recinto {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 74%;
+    height: 78%;
+    background: #f0ead8;
+    border: 3px solid var(--verde);
+    border-radius: 10px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.12);
+  }
+
+  .mapa-zona {
+    position: absolute;
+    border-radius: 7px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.22s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 6px;
+  }
+  .mapa-zona:hover {
+    transform: scale(1.04);
+    z-index: 10;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.25);
+    border-color: var(--dorado);
+  }
+  .mapa-zona.resaltada {
+    border-color: var(--dorado);
+    z-index: 10;
+    animation: zonaPulse 1.4s infinite;
+  }
+
+  .zona-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.72rem;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    line-height: 1.2;
+    font-weight: 700;
+  }
+  .zona-icon { font-size: 1.2rem; margin-bottom: 2px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)); }
+
+  .mapa-patio-label {
+    position: absolute;
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    color: #3d2b1f;
+    opacity: 0.35;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .mapa-circulacion {
+    position: absolute;
+    background: rgba(255,255,255,0.55);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  /* Gates */
+  .mapa-gate {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.52rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 20;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .gate-v { background: var(--dorado); color: #3d2b1f; }
+  .gate-p { background: #4db86a; color: white; }
+  .mapa-gate:hover { transform: scale(1.35); box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+  .gate-tip {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3d2b1f;
+    color: white;
+    font-size: 0.58rem;
+    padding: 3px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .mapa-gate:hover .gate-tip { opacity: 1; }
+
+  /* Tooltip flotante */
+  .zona-tooltip {
+    position: fixed;
+    background: #3d2b1f;
+    color: var(--crema);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    max-width: 190px;
+    pointer-events: none;
+    z-index: 999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    border-top: 3px solid var(--dorado);
+    display: none;
+  }
+  .zona-tooltip h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--dorado);
+    margin-bottom: 4px;
+  }
+
+  /* Brújula y escala */
+  .mapa-compass {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 44px; height: 44px;
+    background: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    z-index: 30;
+    border: 2px solid var(--verde);
+  }
+  .mapa-escala {
+    position: absolute;
+    bottom: 14px; right: 14px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: #3d2b1f;
+    z-index: 30;
+    border: 1px solid var(--verde);
+  }
+
+  @keyframes zonaPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(200,165,53,0.6); }
+    50%       { box-shadow: 0 0 0 7px rgba(200,165,53,0); }
+  }
+
+  @media (max-width: 768px) {
+    .mapa-layout { grid-template-columns: 1fr; }
+    .mapa-sidebar { max-height: 220px; }
+  }
+
+  /* NOTICIAS */
+  .noticias-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+
+  .noticia-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+
+  .noticia-card:hover { transform: translateY(-5px); box-shadow: 0 8px 40px rgba(0,0,0,0.12); }
+
+  .noticia-img {
+    height: 180px;
+    background: linear-gradient(135deg, var(--verde) 0%, var(--verde-claro) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .noticia-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.2));
+  }
+
+  .noticia-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: var(--naranja);
+    color: white;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 2px;
+    z-index: 1;
+  }
+
+  .noticia-body { padding: 1.5rem; }
+  .noticia-fecha { color: #aaa; font-size: 0.8rem; margin-bottom: 0.5rem; }
+  .noticia-body h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gris); margin-bottom: 0.7rem; line-height: 1.4; }
+  .noticia-body p { font-size: 0.88rem; color: #777; line-height: 1.6; }
+
+  .ver-mas {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    color: var(--verde);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .ver-mas:hover { border-bottom-color: var(--verde); }
+
+  /* HISTORIA */
+  .timeline { position: relative; max-width: 750px; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 60px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--dorado), var(--verde));
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    animation: fadeIn 0.5s ease both;
+  }
+
+  .timeline-year {
+    min-width: 60px;
+    text-align: right;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--dorado);
+    padding-top: 0.7rem;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: 53px;
+    top: 12px;
+    width: 16px;
+    height: 16px;
+    background: var(--verde);
+    border: 3px solid var(--dorado);
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  .timeline-content {
+    background: white;
+    border-radius: 12px;
+    padding: 1.3rem 1.5rem;
+    flex: 1;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    border-left: 3px solid var(--dorado);
+    margin-left: 1rem;
+  }
+
+  .timeline-content h4 { font-family: 'Playfair Display', serif; color: var(--verde); margin-bottom: 0.4rem; font-size: 1.05rem; }
+  .timeline-content p { font-size: 0.9rem; color: #666; line-height: 1.6; }
+
+  .historia-intro {
+    background: var(--verde);
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .historia-intro::before {
+    content: '"';
+    position: absolute;
+    top: -20px;
+    right: 2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 12rem;
+    color: rgba(255,255,255,0.05);
+    line-height: 1;
+  }
+  .historia-intro p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    font-weight: 300;
+    position: relative;
+    z-index: 1;
+  }
+  .historia-intro strong { color: var(--dorado); }
+
+  /* FOOTER */
+  footer {
+    background: var(--gris);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.85rem;
+    margin-top: 2rem;
+  }
+  footer a { color: var(--dorado); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    nav { flex-direction: column; padding: 0; }
+    .nav-logo { padding: 1rem; }
+    .nav-tabs { width: 100%; overflow-x: auto; }
+    .tab-btn { padding: 0.9rem 1rem; font-size: 0.75rem; white-space: nowrap; }
+    .horarios-grid { grid-template-columns: 1fr; }
+    .mapa-info { grid-template-columns: 1fr; }
+    .hero { padding: 3rem 1.5rem; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .timeline::before { left: 40px; }
+    .timeline-year { min-width: 40px; font-size: 0.9rem; }
+    .timeline-dot { left: 33px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    Mercado Lo Valledor
+    <span>Corazón hortofrutícola de Chile</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showSection('inicio')">🏠 Inicio</button>
+    <button class="tab-btn" onclick="showSection('horarios')">🕐 Horarios</button>
+    <button class="tab-btn" onclick="showSection('mapa')">📍 Mapa</button>
+    <button class="tab-btn" onclick="showSection('noticias')">📰 Noticias</button>
+    <button class="tab-btn" onclick="showSection('historia')">📜 Historia</button>
+  </div>
+</nav>
+
+<!-- INICIO -->
+<div id="inicio" class="section active">
+  <div class="hero">
+    <div class="hero-badge">Mercado Mayorista</div>
+    <h1>El <em>corazón</em> hortofrutícola de Chile</h1>
+    <p>El mayor punto de encuentro entre productores y comerciantes. Llevamos casi 60 años siendo el motor que mueve la alimentación de millones de personas.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">60</span>
+        <span class="stat-label">Años de historia</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">2,5M</span>
+        <span class="stat-label">Toneladas al año</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">7/7</span>
+        <span class="stat-label">Días a la semana</span>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="mapa-info">
+      <div class="info-card" onclick="showSection('horarios')" style="cursor:pointer">
+        <div class="ic">🕐</div>
+        <h4>Horarios</h4>
+        <p>Abierto todos los días desde las 20:00 hrs hasta las 14:00 hrs del día siguiente.</p>
+      </div>
+      <div class="info-card" onclick="showSection('mapa')" style="cursor:pointer">
+        <div class="ic">📍</div>
+        <h4>Cómo llegar</h4>
+        <p>Ubicado en Pedro Aguirre Cerda, Santiago. Múltiples accesos y rutas disponibles.</p>
+      </div>
+      <div class="info-card" onclick="showSection('noticias')" style="cursor:pointer">
+        <div class="ic">📰</div>
+        <h4>Últimas noticias</h4>
+        <p>Mantente informado sobre cambios de temporada, eventos y novedades del mercado.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HORARIOS -->
+<div id="horarios" class="section">
+  <div class="container">
+    <div class="section-sub">Información operativa</div>
+    <h2 class="section-title">Horarios de acceso</h2>
+    <div class="horarios-grid">
+      <div class="horario-card">
+        <div class="horario-header">
+          <div class="horario-icon">🛒</div>
+          <div>
+            <h3>Compradores</h3>
+            <p>Acceso al mercado para compras</p>
+          </div>
+        </div>
+        <div class="horario-body">
+          <div class="horario-item">
+            <span class="dia">Lunes a Viernes</span>
+            <span class="hora">20:00 → 14:00 hrs</span>
+          </div>
+          <div class="horario-item">
+            <span class="dia">Sábado</span>
+            <span class="hora">Cierre a las 14:00</span>
+          </div>
+          <div class="horario-item">
+            <span class="dia">Domingo</span>
+            <span class="hora">Apertura 20:00 hrs</span>
+          </div>
+          <div class="horario-item">
+            <span class="dia">Días feriados</span>
+            <span class="hora">Ver RRSS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="horario-card">
+        <div class="horario-header">
+          <div class="horario-icon">🚛</div>
+          <div>
+            <h3>Vendedores / Camiones</h3>
+            <p>Ingreso de carga al recinto</p>
+          </div>
+        </div>
+        <div class="horario-body">
+          <div class="horario-item">
+            <span class="dia">Domingo</span>
+            <span class="hora">Desde 11:00 hrs</span>
+          </div>
+          <div class="horario-item">
+            <span class="dia">Lunes a Viernes</span>
+            <span class="hora">Horario continuo</span>
+          </div>
+          <div class="horario-item">
+            <span class="dia">Sábado</span>
+            <span class="hora">Hasta las 14:00</span>
+          </div>
+          <div class="horario-item">
+            <span class="dia">Sáb 14:00 → Dom 11:00</span>
+            <span class="hora">❌ Cerrado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alerta">
+      ⚠️ <strong>Atención días feriados:</strong> En fechas como el 1 de mayo, 17, 18 y 19 de septiembre, Navidad y Año Nuevo (feriados irrenunciables), consulta horarios especiales en nuestras redes sociales antes de venir.
+    </div>
+
+    <div style="margin-top:2rem; background:white; border-radius:12px; padding:1.5rem; box-shadow:0 2px 20px rgba(0,0,0,0.06);">
+      <h4 style="font-family:'Playfair Display',serif; color:var(--verde); margin-bottom:1rem;">📞 Contacto</h4>
+      <p style="font-size:1rem; color:#555;">Central telefónica: <strong style="color:var(--verde);">+562 2410 92 00</strong></p>
+      <p style="font-size:0.85rem; color:#aaa; margin-top:0.5rem;">Recuerda siempre portar tu documento de identidad al ingresar.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MAPA -->
+<div id="mapa" class="section">
+  <div class="container">
+    <div class="section-sub">Plano interactivo del recinto</div>
+    <h2 class="section-title">Mapa del mercado</h2>
+
+    <div class="mapa-interactivo-wrap">
+      <div class="mapa-banner">
+        ⏰ Abierto todos los días &nbsp;|&nbsp; <strong>20:00 → 14:00 hrs</strong> del día siguiente &nbsp;|&nbsp; 📍 Av. Maipú 3301, Pedro Aguirre Cerda
+      </div>
+
+      <div class="mapa-layout">
+        <!-- Sidebar -->
+        <div class="mapa-sidebar">
+          <div class="mapa-tab-bar">
+            <button class="mapa-tab active" onclick="mapaTab('rubros',this)">Rubros</button>
+            <button class="mapa-tab" onclick="mapaTab('accesos',this)">Accesos</button>
+            <button class="mapa-tab" onclick="mapaTab('servicios',this)">Servicios</button>
+          </div>
+
+          <div id="mtab-rubros">
+            <div class="mapa-sidebar-title">Tipos de productos</div>
+            <div class="mapa-legend-item" onclick="resaltarZona('frutas',this)">
+              <div class="mapa-legend-dot" style="background:#4caf50"></div>
+              <div><div class="mapa-legend-text">🍎 Frutas</div><div class="mapa-legend-sub">Patios 1 y 2</div></div>
+            </div>
+            <div class="mapa-legend-item" onclick="resaltarZona('verduras',this)">
+              <div class="mapa-legend-dot" style="background:#8bc34a"></div>
+              <div><div class="mapa-legend-text">🥦 Verduras y Hortalizas</div><div class="mapa-legend-sub">Patio 3</div></div>
+            </div>
+            <div class="mapa-legend-item" onclick="resaltarZona('carnes',this)">
+              <div class="mapa-legend-dot" style="background:#b71c1c"></div>
+              <div><div class="mapa-legend-text">🥩 Carnes y Cecinas</div><div class="mapa-legend-sub">Sector Norte</div></div>
+            </div>
+            <div class="mapa-legend-item" onclick="resaltarZona('legumbres',this)">
+              <div class="mapa-legend-dot" style="background:#795548"></div>
+              <div><div class="mapa-legend-text">🫘 Legumbres y Secos</div><div class="mapa-legend-sub">Patio 4</div></div>
+            </div>
+            <div class="mapa-legend-item" onclick="resaltarZona('abarrotes',this)">
+              <div class="mapa-legend-dot" style="background:#ff9800"></div>
+              <div><div class="mapa-legend-text">🛒 Abarrotes e Insumos</div><div class="mapa-legend-sub">Sector comercial</div></div>
+            </div>
+            <div class="mapa-legend-item" onclick="resaltarZona('flores',this)">
+              <div class="mapa-legend-dot" style="background:#e91e63"></div>
+              <div><div class="mapa-legend-text">🌷 Flores y Plantas</div><div class="mapa-legend-sub">Sector Oriente</div></div>
+            </div>
+            <div class="mapa-legend-item" onclick="resaltarZona('huevos',this)">
+              <div class="mapa-legend-dot" style="background:#c8a535"></div>
+              <div><div class="mapa-legend-text">🥚 Huevos</div><div class="mapa-legend-sub">Sector dedicado</div></div>
+            </div>
+          </div>
+
+          <div id="mtab-accesos" style="display:none">
+            <div class="mapa-sidebar-title">Accesos al mercado</div>
+            <div class="mapa-legend-item">
+              <div class="mapa-legend-dot" style="background:#c8a535;border-radius:50%"></div>
+              <div><div class="mapa-legend-text">🚗 Vehiculares (9)</div><div class="mapa-legend-sub">Control de documentos requerido</div></div>
+            </div>
+            <div class="mapa-legend-item">
+              <div class="mapa-legend-dot" style="background:#4db86a;border-radius:50%"></div>
+              <div><div class="mapa-legend-text">🚶 Peatonales (6)</div><div class="mapa-legend-sub">Distribuidos en el perímetro</div></div>
+            </div>
+            <div class="mapa-info-box">
+              <h5>🚇 Metro y buses</h5>
+              <p><strong>Línea 6:</strong> Estación Lo Valledor<br><strong>MetroTren:</strong> 8 min caminando<br><strong>RED:</strong> Líneas 105, 120, 125, 113, 345, H04, H06, H07</p>
+            </div>
+            <div class="mapa-info-box" style="margin-top:6px">
+              <h5>🚗 En vehículo</h5>
+              <p>Acceso desde autopistas principales.<br>Sin estacionamiento permanente — zona de carga y descarga.<br><strong>Tarifa: $7.000</strong></p>
+            </div>
+          </div>
+
+          <div id="mtab-servicios" style="display:none">
+            <div class="mapa-sidebar-title">Servicios del recinto</div>
+            <div class="mapa-legend-item" onclick="resaltarZona('comidas',this)">
+              <div class="mapa-legend-dot" style="background:#7c3aed"></div>
+              <div><div class="mapa-legend-text">🍜 Cocinerías y Food Trucks</div><div class="mapa-legend-sub">Distribuidas en el recinto</div></div>
+            </div>
+            <div class="mapa-legend-item" onclick="resaltarZona('cash',this)">
+              <div class="mapa-legend-dot" style="background:#455a64"></div>
+              <div><div class="mapa-legend-text">🏦 Cash Center</div><div class="mapa-legend-sub">Servicios financieros</div></div>
+            </div>
+            <div class="mapa-legend-item" onclick="resaltarZona('servicios',this)">
+              <div class="mapa-legend-dot" style="background:#0288d1"></div>
+              <div><div class="mapa-legend-text">🚻 Servicios Higiénicos (9)</div><div class="mapa-legend-sub">Con duchas de agua caliente</div></div>
+            </div>
+            <div class="mapa-legend-item" onclick="resaltarZona('carga',this)">
+              <div class="mapa-legend-dot" style="background:#607d8b"></div>
+              <div><div class="mapa-legend-text">🚛 Zona de Carga</div><div class="mapa-legend-sub">Perimetral — 24 hrs</div></div>
+            </div>
+            <div class="mapa-legend-item">
+              <div class="mapa-legend-dot" style="background:#ef5350;border-radius:50%"></div>
+              <div><div class="mapa-legend-text">🏥 Primeros Auxilios</div><div class="mapa-legend-sub">Paramédico disponible</div></div>
+            </div>
+          </div>
+
+          <div style="margin-top:auto;padding-top:12px;">
+            <div style="background:rgba(200,165,53,0.1);border:1px solid rgba(200,165,53,0.3);border-radius:8px;padding:8px 10px;">
+              <p style="color:rgba(255,255,255,0.55);font-size:0.65rem;line-height:1.6;">💡 <strong style="color:var(--dorado)">Tip:</strong> Haz clic en cualquier zona del mapa o ítem del panel para resaltarla.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Canvas del mapa -->
+        <div class="mapa-canvas" id="mapaCanvas">
+          <div class="mapa-grid-bg"></div>
+          <div class="mapa-inner" id="mapaInner">
+
+            <!-- Calles -->
+            <div class="mapa-calle mapa-calle-top">Av. Maipú</div>
+            <div class="mapa-calle mapa-calle-bottom">Calle La Rural</div>
+            <div class="mapa-calle mapa-calle-left">Av. Departamental</div>
+            <div class="mapa-calle mapa-calle-right">Gral. Velásquez</div>
+
+            <!-- Recinto -->
+            <div class="mapa-recinto" id="mapaRecinto">
+
+              <!-- Patio labels -->
+              <div class="mapa-patio-label" style="top:7%;left:7%">Patio 1</div>
+              <div class="mapa-patio-label" style="top:7%;right:7%">Patio 2</div>
+              <div class="mapa-patio-label" style="bottom:10%;left:7%">Patio 3</div>
+              <div class="mapa-patio-label" style="bottom:10%;right:7%">Patio 4</div>
+
+              <!-- Circulación -->
+              <div class="mapa-circulacion" style="left:47%;top:4%;bottom:4%;width:5%"></div>
+              <div class="mapa-circulacion" style="top:47%;left:4%;right:4%;height:5%"></div>
+              <div class="mapa-circulacion" style="left:21%;top:4%;bottom:4%;width:3%"></div>
+              <div class="mapa-circulacion" style="left:73%;top:4%;bottom:4%;width:3%"></div>
+
+              <!-- ZONAS -->
+              <div class="mapa-zona" id="mz-frutas" style="left:7%;top:7%;width:28%;height:35%;background:rgba(76,175,80,0.82)"
+                onmouseenter="mostrarTooltip(event,'frutas')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('frutas',null)">
+                <div class="zona-icon">🍎</div><div class="zona-label">Frutas<br>Patio 1</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-verduras" style="left:7%;top:52%;width:28%;height:35%;background:rgba(139,195,74,0.82)"
+                onmouseenter="mostrarTooltip(event,'verduras')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('verduras',null)">
+                <div class="zona-icon">🥦</div><div class="zona-label">Verduras<br>Patio 3</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-frutas2" style="left:53%;top:7%;width:22%;height:32%;background:rgba(76,175,80,0.82)"
+                onmouseenter="mostrarTooltip(event,'frutas')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('frutas',null)">
+                <div class="zona-icon">🍊</div><div class="zona-label">Frutas<br>Patio 2</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-legumbres" style="left:53%;top:47%;width:22%;height:32%;background:rgba(121,85,72,0.82)"
+                onmouseenter="mostrarTooltip(event,'legumbres')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('legumbres',null)">
+                <div class="zona-icon">🫘</div><div class="zona-label">Legumbres<br>Patio 4</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-carnes" style="left:39%;top:4%;width:11%;height:20%;background:rgba(183,28,28,0.82)"
+                onmouseenter="mostrarTooltip(event,'carnes')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('carnes',null)">
+                <div class="zona-icon">🥩</div><div class="zona-label">Carnes</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-huevos" style="left:78%;top:9%;width:14%;height:18%;background:rgba(200,165,53,0.85)"
+                onmouseenter="mostrarTooltip(event,'huevos')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('huevos',null)">
+                <div class="zona-icon">🥚</div><div class="zona-label">Huevos</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-flores" style="left:78%;top:33%;width:14%;height:20%;background:rgba(233,30,99,0.82)"
+                onmouseenter="mostrarTooltip(event,'flores')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('flores',null)">
+                <div class="zona-icon">🌷</div><div class="zona-label">Flores</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-abarrotes" style="left:39%;top:76%;width:20%;height:18%;background:rgba(255,152,0,0.85)"
+                onmouseenter="mostrarTooltip(event,'abarrotes')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('abarrotes',null)">
+                <div class="zona-icon">🛒</div><div class="zona-label">Abarrotes</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-comidas" style="left:62%;top:76%;width:14%;height:18%;background:rgba(124,58,237,0.85)"
+                onmouseenter="mostrarTooltip(event,'comidas')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('comidas',null)">
+                <div class="zona-icon">🍜</div><div class="zona-label">Cocinerías</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-cash" style="left:39%;top:27%;width:11%;height:16%;background:rgba(69,90,100,0.85)"
+                onmouseenter="mostrarTooltip(event,'cash')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('cash',null)">
+                <div class="zona-icon">🏦</div><div class="zona-label">Cash<br>Center</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-servicios" style="left:39%;top:49%;width:11%;height:23%;background:rgba(2,136,209,0.85)"
+                onmouseenter="mostrarTooltip(event,'servicios')" onmouseleave="ocultarTooltip()"
+                onclick="resaltarZona('servicios',null)">
+                <div class="zona-icon">🚻</div><div class="zona-label">Servicios</div>
+              </div>
+
+              <div class="mapa-zona" id="mz-carga" style="left:4%;top:4%;width:3%;height:92%;border-radius:3px;background:rgba(96,125,139,0.75)"
+                onmouseenter="mostrarTooltip(event,'carga')" onmouseleave="ocultarTooltip()">
+              </div>
+              <div class="mapa-zona" id="mz-carga2" style="left:78%;top:58%;width:14%;height:18%;background:rgba(96,125,139,0.82)"
+                onmouseenter="mostrarTooltip(event,'carga')" onmouseleave="ocultarTooltip()">
+                <div class="zona-icon">🚛</div><div class="zona-label">Carga</div>
+              </div>
+
+            </div><!-- /recinto -->
+
+            <!-- Gates vehiculares -->
+            <div class="mapa-gate gate-v" style="top:10%;left:30%">V1<div class="gate-tip">Puerta Vehicular 1</div></div>
+            <div class="mapa-gate gate-v" style="top:10%;left:50%">V2<div class="gate-tip">Puerta Vehicular 2</div></div>
+            <div class="mapa-gate gate-v" style="top:10%;right:22%">V3<div class="gate-tip">Puerta Vehicular 3</div></div>
+            <div class="mapa-gate gate-v" style="top:38%;left:10%">V4<div class="gate-tip">Puerta Vehicular 4</div></div>
+            <div class="mapa-gate gate-v" style="top:58%;left:10%">V5<div class="gate-tip">Puerta Vehicular 5</div></div>
+            <div class="mapa-gate gate-v" style="bottom:10%;left:30%">V6<div class="gate-tip">Puerta Vehicular 6</div></div>
+            <div class="mapa-gate gate-v" style="bottom:10%;left:50%">V7<div class="gate-tip">Puerta Vehicular 7 — CCTV</div></div>
+            <div class="mapa-gate gate-v" style="bottom:10%;right:22%">V8<div class="gate-tip">Puerta Vehicular 8</div></div>
+            <div class="mapa-gate gate-v" style="top:50%;right:10%">V9<div class="gate-tip">Puerta Vehicular 9</div></div>
+
+            <!-- Gates peatonales -->
+            <div class="mapa-gate gate-p" style="top:10%;left:40%">P1<div class="gate-tip">Acceso Peatonal 1</div></div>
+            <div class="mapa-gate gate-p" style="top:38%;right:10%">P2<div class="gate-tip">Acceso Peatonal 2</div></div>
+            <div class="mapa-gate gate-p" style="bottom:10%;left:40%">P3<div class="gate-tip">Acceso Peatonal 3</div></div>
+            <div class="mapa-gate gate-p" style="bottom:10%;right:30%">P4<div class="gate-tip">Acceso Peatonal 4</div></div>
+            <div class="mapa-gate gate-p" style="top:62%;right:10%">P5<div class="gate-tip">Acceso Peatonal 5</div></div>
+            <div class="mapa-gate gate-p" style="top:50%;left:10%">P6<div class="gate-tip">Acceso Peatonal 6</div></div>
+
+            <div class="mapa-compass">🧭</div>
+            <div class="mapa-escala">Aprox. 300.000 m² — Esquema referencial</div>
+
+          </div><!-- /inner -->
+
+          <!-- Tooltip flotante -->
+          <div class="zona-tooltip" id="zonaTooltip">
+            <h4 id="zt-title"></h4>
+            <p id="zt-desc"></p>
+          </div>
+        </div><!-- /canvas -->
+      </div><!-- /layout -->
+    </div><!-- /wrap -->
+
+    <!-- Info cards debajo -->
+    <div class="mapa-info">
+      <div class="info-card">
+        <div class="ic">📌</div>
+        <h4>Dirección</h4>
+        <p>Av. Maipú 3301, Pedro Aguirre Cerda, Santiago</p>
+      </div>
+      <div class="info-card">
+        <div class="ic">🚇</div>
+        <h4>Transporte público</h4>
+        <p>Metro Línea 6 (Est. Lo Valledor) · MetroTren · Buses RED 105, 120, 125, 113, 345, H04, H06, H07</p>
+      </div>
+      <div class="info-card">
+        <div class="ic">🚗</div>
+        <h4>En vehículo</h4>
+        <p>9 accesos vehiculares. Sin estacionamiento permanente. Tarifa de ingreso: <strong>$7.000</strong></p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:2rem;">
+      <a href="https://mercadolovalledor.cl/como-llegar/" target="_blank" style="display:inline-block; background:var(--verde); color:white; padding:0.9rem 2rem; border-radius:8px; text-decoration:none; font-weight:500; transition:background 0.2s;" onmouseover="this.style.background='var(--verde-claro)'" onmouseout="this.style.background='var(--verde)'">Cómo llegar — Sitio oficial →</a>
+    </div>
+  </div>
+</div>
+
+<!-- NOTICIAS -->
+<div id="noticias" class="section">
+  <div class="container">
+    <div class="section-sub">Últimas novedades</div>
+    <h2 class="section-title">Noticias del mercado</h2>
+    <div class="noticias-grid">
+
+      <div class="noticia-card" onclick="window.open('https://mercadolovalledor.cl/cambio-de-temporada-melones-y-sandias-finalizan-horario-extendido-y-la-uva-se-traslada-a-patio-2/','_blank')">
+        <div class="noticia-img">🍇<span class="noticia-tag">Temporada</span></div>
+        <div class="noticia-body">
+          <p class="noticia-fecha">Marzo 2026</p>
+          <h3>Cambio de temporada: melones y sandías finalizan y la uva llega al Patio 2</h3>
+          <p>El Patio 2 da paso a las mejores uvas de Chile tras la exitosa temporada de sandías y melones.</p>
+          <a class="ver-mas">Leer más →</a>
+        </div>
+      </div>
+
+      <div class="noticia-card" onclick="window.open('https://mercadolovalledor.cl/ministra-de-seguridad-recorrio-lo-valledor-y-conocio-sus-sistemas-de-control-y-monitoreo/','_blank')">
+        <div class="noticia-img">🔒<span class="noticia-tag">Seguridad</span></div>
+        <div class="noticia-body">
+          <p class="noticia-fecha">Marzo 2026</p>
+          <h3>Ministra de Seguridad recorrió Lo Valledor y sus sistemas de monitoreo</h3>
+          <p>La ministra Trinidad Steinert visitó el mercado para conocer los sistemas CCTV y control de acceso.</p>
+          <a class="ver-mas">Leer más →</a>
+        </div>
+      </div>
+
+      <div class="noticia-card" onclick="window.open('https://mercadolovalledor.cl/nuevo-sistema-de-carga-de-gas-para-gruas-permitira-reducir-costos-y-mejorar-la-eficiencia-operativa/','_blank')">
+        <div class="noticia-img">⚙️<span class="noticia-tag">Operaciones</span></div>
+        <div class="noticia-body">
+          <p class="noticia-fecha">Marzo 2026</p>
+          <h3>Nuevo sistema de carga de gas para grúas mejorará eficiencia operativa</h3>
+          <p>Acuerdo con Lipigas modernizará el abastecimiento de grúas horquilla del mercado.</p>
+          <a class="ver-mas">Leer más →</a>
+        </div>
+      </div>
+
+      <div class="noticia-card" onclick="window.open('https://mercadolovalledor.cl/mas-de-60-ninos-dan-el-puntapie-inicial-a-la-temporada-2026-de-la-escuela-de-futbol-nueva-independencia/','_blank')">
+        <div class="noticia-img">⚽<span class="noticia-tag">Comunidad</span></div>
+        <div class="noticia-body">
+          <p class="noticia-fecha">Enero 2026</p>
+          <h3>Más de 60 niños inician la temporada 2026 de la Escuela de Fútbol Nueva Independencia</h3>
+          <p>La Fundación Lo Valledor apadrina esta escuela desde 2011, apoyando el desarrollo de niñas y niños.</p>
+          <a class="ver-mas">Leer más →</a>
+        </div>
+      </div>
+
+      <div class="noticia-card" onclick="window.open('https://mercadolovalledor.cl/entre-magia-y-talentos-lo-valledor-premio-a-hijos-de-colaboradores-por-su-excelencia-academica/','_blank')">
+        <div class="noticia-img">🏆<span class="noticia-tag">Comunidad</span></div>
+        <div class="noticia-body">
+          <p class="noticia-fecha">Diciembre 2025</p>
+          <h3>Lo Valledor premió a hijos de colaboradores por excelencia académica</h3>
+          <p>Una nueva versión del Concurso de Excelencia Académica reconoció el esfuerzo de la comunidad.</p>
+          <a class="ver-mas">Leer más →</a>
+        </div>
+      </div>
+
+      <div class="noticia-card" onclick="window.open('https://mercadolovalledor.cl/noticias/','_blank')" style="border: 2px dashed #ddd; background:transparent; display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:220px; text-align:center; gap:0.7rem;">
+        <div style="font-size:2.5rem;">📋</div>
+        <p style="color:#999; font-size:0.9rem;">Ver todas las noticias en el sitio oficial</p>
+        <span style="color:var(--verde); font-weight:600; font-size:0.85rem;">mercadolovalledor.cl →</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- HISTORIA -->
+<div id="historia" class="section">
+  <div class="container">
+    <div class="section-sub">Nuestra trayectoria</div>
+    <h2 class="section-title">Historia del mercado</h2>
+
+    <div class="historia-intro">
+      <p>Somos <strong>Mercado Mayorista Lo Valledor</strong>, el mayor punto de encuentro entre quienes producen y los que abastecen a Chile. Llevamos casi <strong>60 años</strong> siendo el motor que mueve la alimentación de millones de personas, con más de <strong>2,5 millones de toneladas</strong> de productos intercambiados cada año.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1968</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Fundación del mercado</h4>
+          <p>Mercado Mayorista Lo Valledor abre sus puertas en Pedro Aguirre Cerda, Santiago, convirtiéndose desde el primer día en el principal centro de distribución hortofrutícola del país.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">1970s</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Consolidación como centro mayorista</h4>
+          <p>El mercado se establece como el eje central de la cadena alimentaria chilena, conectando agricultores del norte y sur del país con comerciantes y distribuidores de la capital.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">1990s</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Expansión y modernización</h4>
+          <p>Ampliación de instalaciones y modernización de infraestructura para responder al creciente volumen de transacciones y la diversificación de productos comercializados.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">2011</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Fundación Lo Valledor</h4>
+          <p>Nace la Fundación Lo Valledor, iniciativa de responsabilidad social que incluye el apadrinamiento de la Escuela de Fútbol Nueva Independencia, apoyando a niños de la comuna de Pedro Aguirre Cerda.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">2020s</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h4>Digitalización y seguridad avanzada</h4>
+          <p>Implementación de sistemas modernos de CCTV, control de acceso digital y sistemas de gestión operativa. El mercado consolida su posición como el más grande y seguro de Chile.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">Hoy</div>
+        <div class="timeline-dot" style="background:var(--naranja); border-color:var(--naranja);"></div>
+        <div class="timeline-content" style="border-left-color:var(--naranja);">
+          <h4>El corazón hortofrutícola de Chile</h4>
+          <p>Con casi 60 años de historia, Lo Valledor mueve más de 2,5 millones de toneladas al año, representando una parte significativa de las transacciones alimentarias nacionales y metropolitanas. Agricultores, comerciantes y trabajadores conviven en una comunidad que alimenta a Chile.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:3rem;">
+      <a href="https://mercadolovalledor.cl/nosotros/" target="_blank" style="display:inline-block; background:var(--verde); color:white; padding:0.9rem 2rem; border-radius:8px; text-decoration:none; font-weight:500;">Conocer más sobre nosotros →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>App informativa creada en base a <a href="https://mercadolovalledor.cl" target="_blank">mercadolovalledor.cl</a> · Toda la información oficial en el sitio web del mercado.</p>
+</footer>
+
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    const tabs = ['inicio','horarios','mapa','noticias','historia'];
+    document.querySelectorAll('.tab-btn')[tabs.indexOf(id)].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Mapa interactivo
+  const zonaData = {
+    frutas:    { title: "🍎 Frutas", desc: "Fruta nacional e importada. Patios 1 y 2. Uvas, manzanas, naranjas, sandías, melones, cerezas y más." },
+    verduras:  { title: "🥦 Verduras y Hortalizas", desc: "Hortalizas frescas del campo. Patio 3. Tomates, lechugas, papas, cebollas, zapallos y más." },
+    carnes:    { title: "🥩 Carnes y Cecinas", desc: "Sector Norte. Carnes de vacuno, cerdo y aves. Cecinas y productos cárnicos al por mayor." },
+    legumbres: { title: "🫘 Legumbres y Secos", desc: "Patio 4. Lentejas, porotos, garbanzos, arroz y otros productos no perecibles." },
+    abarrotes: { title: "🛒 Abarrotes e Insumos", desc: "Sector comercial. Insumos para negocios, envases y materiales de embalaje al por mayor." },
+    flores:    { title: "🌷 Flores y Plantas", desc: "Sector Oriente. Flores de corte, plantas ornamentales e insumos florales." },
+    huevos:    { title: "🥚 Huevos", desc: "Sector dedicado. Huevos frescos al por mayor, distintos tamaños y categorías." },
+    comidas:   { title: "🍜 Cocinerías y Food Trucks", desc: "Puntos de alimentación en el recinto. Desayunos y almuerzos para compradores y trabajadores." },
+    servicios: { title: "🚻 Servicios Higiénicos", desc: "9 baños distribuidos en el recinto, todos con duchas de agua caliente." },
+    carga:     { title: "🚛 Zona de Carga y Descarga", desc: "Área perimetral para camiones y vehículos de carga. Acceso controlado las 24 hrs." },
+    cash:      { title: "🏦 Cash Center", desc: "Centro de servicios financieros del mercado para compradores y vendedores mayoristas." }
+  };
+
+  let zonaActiva = null;
+
+  function mostrarTooltip(e, key) {
+    const d = zonaData[key]; if (!d) return;
+    const tt = document.getElementById('zonaTooltip');
+    document.getElementById('zt-title').textContent = d.title;
+    document.getElementById('zt-desc').textContent = d.desc;
+    tt.style.display = 'block';
+    tt.style.left = (e.clientX + 14) + 'px';
+    tt.style.top  = (e.clientY - 20) + 'px';
+  }
+
+  function ocultarTooltip() {
+    document.getElementById('zonaTooltip').style.display = 'none';
+  }
+
+  function resaltarZona(key, legendEl) {
+    document.querySelectorAll('.mapa-zona').forEach(z => z.classList.remove('resaltada'));
+    document.querySelectorAll('.mapa-legend-item').forEach(l => l.classList.remove('active'));
+    if (zonaActiva === key) { zonaActiva = null; return; }
+    zonaActiva = key;
+    document.querySelectorAll('[id^="mz-' + key + '"]').forEach(z => z.classList.add('resaltada'));
+    if (legendEl) legendEl.classList.add('active');
+  }
+
+  function mapaTab(tabName, btn) {
+    document.querySelectorAll('[id^="mtab-"]').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.mapa-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('mtab-' + tabName).style.display = 'block';
+    btn.classList.add('active');
+  }
+
+  document.addEventListener('mousemove', function(e) {
+    const tt = document.getElementById('zonaTooltip');
+    if (tt && tt.style.display === 'block') {
+      tt.style.left = (e.clientX + 14) + 'px';
+      tt.style.top  = (e.clientY - 20) + 'px';
+    }
+  });
+
+  // Registrar Service Worker (PWA)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log('Service Worker registrado ✓'))
+        .catch(err => console.log('SW error:', err));
+    });
+  }
+</script>
+</body>
+</html>
